@@ -1,0 +1,68 @@
+
+
+# environment common bundles
+
+# environment 092b04a40fdd4cb8bfdb685f2c4a0328
+bundle common 092b04a40fdd4cb8bfdb685f2c4a0328
+{
+  vars:
+      "activated" string => "--'activated' value passed as a class function--";
+      "env_vars" slist => { "activated", "test", "verbose" };
+      "test" string => "";
+      "verbose" string => "";
+  classes:
+      "runenv_092b04a40fdd4cb8bfdb685f2c4a0328_activated" and => { classmatch("cfengine_3") };
+      "runenv_092b04a40fdd4cb8bfdb685f2c4a0328_test" expression => "!any";
+      "runenv_092b04a40fdd4cb8bfdb685f2c4a0328_verbose" expression => "!any";
+}
+
+
+# activation data
+bundle common cfsketch_g
+{
+  vars:
+      # Files that need to be loaded for the activated sketches and
+      # their dependencies.
+      "inputs" slist => { "sketches/libraries/dclib/library.cf", "sketches/mysketch/motd/main.cf" };
+}
+
+bundle agent cfsketch_run
+{
+  vars:
+
+      # array 'metadata' from definition sketch metadata, activation __motd_from_gui_001_Mysketch_motd_myentry
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[activation][identifier]" string => "motd_from_gui";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[activation][timestamp]" string => "1403608615";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[api][dynamic_path][type]" string => "string";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[api][metadata][type]" string => "metadata";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[api][motd][type]" string => "string";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[api][motd_path][type]" string => "string";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[api][prepend_command][type]" string => "string";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[api][runenv][type]" string => "environment";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[api][symlink_path][type]" string => "string";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[authors]" slist => { "Kaustubh <kaustubh@clogeny.com>" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[depends]" slist => { "CFEngine::dclib", "CFEngine::stdlib" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[license]" string => "MIT";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[location]" string => "sketches/mysketch/motd";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[manifest]" slist => { "README.md", "main.cf", "params/debian_squeeze.json", "params/debian_wheezy.json", "params/example.json", "params/simple.json", "test.cf" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[manifest_cf]" slist => { "main.cf", "test.cf" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[manifest_docs]" slist => { "README.md" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[manifest_exe]" slist => { "cf_null" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[manifest_extra]" slist => { "params/debian_squeeze.json", "params/debian_wheezy.json", "params/example.json", "params/simple.json" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[manifest_test]" slist => { "cf_null" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[name]" string => "Mysketch::motd";
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[tags]" slist => { "cfdc", "enterprise_compatible" };
+      "__motd_from_gui_001_Mysketch_motd_myentry_metadata[version]" string => "1.00";
+
+  methods:
+    any::
+      "cfsketch_g" usebundle => "cfsketch_g";
+      "092b04a40fdd4cb8bfdb685f2c4a0328" usebundle => "092b04a40fdd4cb8bfdb685f2c4a0328";
+
+    runenv_092b04a40fdd4cb8bfdb685f2c4a0328_activated::
+      "__motd_from_gui_001_Mysketch_motd_myentry" usebundle => cfdc_motd:myentry("092b04a40fdd4cb8bfdb685f2c4a0328", "default:cfsketch_run.__motd_from_gui_001_Mysketch_motd_myentry_metadata", "Hello from GUI", "/tmp/cfmotd", "/bin/uname -snrvm", "", ""), ifvarclass => "linux", useresult => "return___motd_from_gui_001_Mysketch_motd_myentry";
+
+  reports:
+    inform_mode::
+      "activation __motd_from_gui_001_Mysketch_motd_myentry could not run because it requires classes linux" ifvarclass => "inform_mode.!(linux)";
+}
